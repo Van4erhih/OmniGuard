@@ -1,11 +1,9 @@
 import requests
 from config import OPENROUTER_API_KEY, MODEL
 
-
 def ask_llm(messages):
     try:
         print("⏳ Отправка запроса к модели...")
-
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
             headers={

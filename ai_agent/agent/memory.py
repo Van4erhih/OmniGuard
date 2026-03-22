@@ -2,7 +2,6 @@ import json
 import os
 import base64
 from threading import Lock
-
 from agent.secure_encryption import (
     encrypt_for_user,
     decrypt_for_user,
@@ -12,11 +11,9 @@ from agent.secure_encryption import (
 MEMORY_FILE = "memory.json"
 lock = Lock()
 
-
 def _load_all():
     if not os.path.exists(MEMORY_FILE):
         return {}
-
     try:
         with open(MEMORY_FILE, "r", encoding="utf-8") as f:
             secured = json.load(f)
@@ -43,10 +40,8 @@ def _load_all():
     except Exception:
         return {}
 
-
 def _save_all(data):
     secured = {}
-
     for user_id, user_data in data.items():
         if "salt" not in user_data.get("profile", {}):
             user_data["profile"]["salt"] = generate_salt()
@@ -72,12 +67,10 @@ def _save_all(data):
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
         json.dump(secured, f, ensure_ascii=False, indent=2)
 
-
 def get_user(user_id: int):
     with lock:
         data = _load_all()
         user_id = str(user_id)
-
         if user_id not in data:
             data[user_id] = {
                 "profile": {
@@ -89,12 +82,10 @@ def get_user(user_id: int):
 
         return data[user_id]
 
-
 def add_message(user_id: int, role: str, content: str):
     with lock:
         data = _load_all()
         user_id = str(user_id)
-
         if user_id not in data:
             data[user_id] = {
                 "profile": {
@@ -113,7 +104,6 @@ def add_message(user_id: int, role: str, content: str):
         data[user_id]["history"] = data[user_id]["history"][-20:]
 
         _save_all(data)
-
 
 def get_history(user_id: int):
     user = get_user(user_id)
